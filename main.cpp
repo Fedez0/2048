@@ -44,7 +44,7 @@ class Game{
             quadrato[AREAGIOCO][AREAGIOCO];
             Text titoloGioco;
 
-            Font font;
+            Font font
             font.loadFromFile(rootFont);
             titoloGioco.setString("2048");
             titoloGioco.setCharacterSize(24);
