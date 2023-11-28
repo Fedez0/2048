@@ -1,165 +1,110 @@
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <conio.h>
-#include <cstdlib>
-#include <windows.h>
-#include <time.h> // To make spawn value more random
-using namespace std;
-bool gameOver;
-const int width = 20;
-const int height = 20;
-int x, y, fruitX, fruitY, score;
-int tailX[100], tailY[100];
-int nTail;
-enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
-eDirecton dir;
-void Setup()
-{
-    gameOver = false;
-    dir = STOP;
-    x = width / 2;
-    y = height / 2;
-    fruitX = rand() % width;
-    fruitY = rand() % height;
-    score = 0;
-}
-void Draw()
-{
-    system("cls"); //system("clear");
-    cout << endl;
-    cout << " ";
-    for (int i = 0; i < width+2; i++)
-        cout << "#";
-    cout << endl;
+#include <cstdlib> // Per la dichiarazione di calloc
+#include <cstring> // Per la dichiarazione di memset
 
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            if (j == 0)
-                cout << " #";
-            if (i == y && j == x)
-                cout << "O";
-            else if (i == fruitY && j == fruitX)
-                cout << "F";
-            else
-            {
-                bool print = false;
-                for (int k = 0; k < nTail; k++)
-                {
-                    if (tailX[k] == j && tailY[k] == i)
-                    {
-                        cout << "o";
-                        print = true;
-                    }
-                }
-                if (!print)
-                    cout << " ";
+using namespace std;
+using namespace sf;
+
+void initWindow(RenderWindow &window);
+
+#define FRAME_RATE 60
+#define AREAGIOCO 5
+
+
+
+const Color QuadratoVuoto(205,193,180);
+//colore del background
+const Color BackGroundColor(187,173,160);
+
+class Game{
+    private:
+        int **areaGioco;
+        RectangleShape quadrato[AREAGIOCO][AREAGIOCO];
+
+    public:
+        Game(){
+            cout<<"Inizializzazione campo di gioco:\n";
+            areaGioco = reinterpret_cast<int**>(calloc(AREAGIOCO, sizeof(int*)));
+            for (int i = 0; i < AREAGIOCO; ++i) {
+                areaGioco[i] = reinterpret_cast<int*>(calloc(AREAGIOCO, sizeof(int)));
             }
 
-            if (j == width - 1)
-                cout << "#";
+        }  
+        bool setValore(int riga,int colonna,int valore){
+            if(riga<0||riga>=AREAGIOCO||colonna<0||colonna>=AREAGIOCO){
+                return false;
+            }else{
+                areaGioco[riga][colonna]=valore;
+                return true;
+            }
         }
-        cout << endl;
-    }
+        void disegnaQuadrati(RenderWindow &window){//INIZIALIZZAZIONE DEI QUADRATI
+            Vector2f dimQuadrato(100.0f,100.0f);
+            quadrato[AREAGIOCO][AREAGIOCO];
+            Text titoloGioco;
 
-    cout << " ";
-    for (int i = 0; i < width+2; i++)
-        cout << "#";
-    cout << endl;
-    cout << " Score:" << score << endl;
-}
-void Input()
-{
-    if (_kbhit())
+            Font font;
+            font.loadFromFile("ClearSans.ttf");
+            titoloGioco.setString("2048");
+            titoloGioco.setCharacterSize(24);
+            titoloGioco.setFont(font);
+            titoloGioco.setStyle(Text::Bold);
+            titoloGioco.setFillColor(Color(119,110,101));
+            titoloGioco.setPosition(800/2-30,30);
+            window.draw(titoloGioco);
+            
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++){
+                    quadrato[i][j].setSize(dimQuadrato);
+                    quadrato[i][j].setFillColor(QuadratoVuoto);
+                    quadrato[i][j].setOutlineColor(BackGroundColor);
+                    quadrato[i][j].setOutlineThickness(6.0f);
+                    quadrato[i][j].setPosition(j * dimQuadrato.x+150, i * dimQuadrato.y+70);
+                    window.draw(quadrato[i][j]);
+                }
+            }
+        }
+        
+
+
+    
+};
+
+int main(){
+    // create the window
+    sf::RenderWindow window(sf::VideoMode(800, 600), "2048");
+    Game game;
+    
+    initWindow(window);
+    // run the program as long as the window is open    
+    while (window.isOpen())
     {
-        switch (_getch())
+        window.clear(BackGroundColor);
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            case 'a':
-                dir = LEFT;
-                break;
-            case 'd':
-                dir = RIGHT;
-                break;
-            case 'w':
-                dir = UP;
-                break;
-            case 's':
-                dir = DOWN;
-                break;
-            case 'x':
-                gameOver = true;
-                break;
-            default:
-                break;
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
-    }
-}
-void Logic()
-{
-    int prevX = tailX[0];
-    int prevY = tailY[0];
-    int prev2X, prev2Y;
-    tailX[0] = x;
-    tailY[0] = y;
-    for (int i = 1; i < nTail; i++)
-    {
-        prev2X = tailX[i];
-        prev2Y = tailY[i];
-        tailX[i] = prevX;
-        tailY[i] = prevY;
-        prevX = prev2X;
-        prevY = prev2Y;
-    }
-    switch (dir)
-    {
-        case LEFT:
-            x--;
-            break;
-        case RIGHT:
-            x++;
-            break;
-        case UP:
-            y--;
-            break;
-        case DOWN:
-            y++;
-            break;
-        default:
-            break;
-    }
-    if (x > width || x < 0 || y > height || y < 0)
-      gameOver = true;
-    //if (x >= width) x = 0; else if (x < 0) x = width - 1;
-    //if (y >= height) y = 0; else if (y < 0) y = height - 1;
 
-    for (int i = 0; i < nTail; i++)
-        if (tailX[i] == x && tailY[i] == y)
-            gameOver = true;
+        // clear the window with black color
+        
 
-    if (x == fruitX && y == fruitY)
-    {
-        srand(time(0)); // Random seed value for rand based on time
-        score += 10;
-        fruitX = rand() % width;
-        fruitY = rand() % height;
-        nTail++;
+        // draw everything here...
+        // window.draw(...);
+        game.disegnaQuadrati(window);
+
+        // end the current frame
+        window.display();
     }
-}
-int main()
-{
-    //Will make cout much faster
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL);
-    //avvia
-    system("C:\\Users\\Windows\\Desktop\\HackerandoMicai.exe");
-    system("MODE con cols=24 lines=25");
-    Setup();
-    while (!gameOver)
-    {
-        Draw();
-        Input();
-        Logic();
-        Sleep(50); //sleep(10);
-    }
+
     return 0;
 }
+void initWindow(RenderWindow &window){
+    window.setFramerateLimit(FRAME_RATE);
+}
+
+
