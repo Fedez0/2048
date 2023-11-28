@@ -12,7 +12,7 @@ void initWindow(RenderWindow &window);
 #define AREAGIOCO 5
 
 
-
+const char rootFont[] = "./res/ClearSans.ttf"; 
 const Color QuadratoVuoto(205,193,180);
 //colore del background
 const Color BackGroundColor(187,173,160);
@@ -45,7 +45,7 @@ class Game{
             Text titoloGioco;
 
             Font font;
-            font.loadFromFile("ClearSans.ttf");
+            font.loadFromFile(rootFont);
             titoloGioco.setString("2048");
             titoloGioco.setCharacterSize(24);
             titoloGioco.setFont(font);
