@@ -180,7 +180,7 @@ class Game{
             }
         }
         void toLeft(RenderWindow &window){
-            
+            cout <<"a";
         }
         void toUp(RenderWindow &window){
             
