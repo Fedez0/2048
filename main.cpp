@@ -28,16 +28,16 @@ const Color QuadratoVuoto(205,193,180);
 const Color BackGroundColor(187,173,160);
 
 const Color stage2(238,228,218);
-const Color stage4();
-const Color stage8();
-const Color stage16();
-const Color stage32();
-const Color stage64();
-const Color stage128();
-const Color stage256();
-const Color stage512();
-const Color stage1024();
-const Color stage2048();
+const Color stage4(238,225,201);
+const Color stage8(243,178,122);
+const Color stage16(246,150,100);
+const Color stage32(247,124,95);
+const Color stage64(246,94,56);
+const Color stage128(237,207,144);
+const Color stage256(237,204,97);
+const Color stage512(237,200,80);
+const Color stage1024(237,197,63);
+const Color stage2048(237,194,46);
 
 
 //const size
@@ -170,6 +170,44 @@ class Game{
                     //aggiornamento valori gioco
                     sprintf(temp,"%d",areaGioco[i][j]);
                     txtValori[i][j].setString(temp);
+                    switch (areaGioco[i][j])
+                    {
+                    case 2:
+                        txtValori[i][j].setFillColor(stage2);
+                        break;
+                    case 4:
+                        txtValori[i][j].setFillColor(stage4);
+                        break;
+                    case 8:
+                        txtValori[i][j].setFillColor(stage8);
+                        break;
+                    case 16:
+                        txtValori[i][j].setFillColor(stage16);
+                        break;
+                    case 32:
+                        txtValori[i][j].setFillColor(stage32);
+                        break;
+                    case 64:
+                        txtValori[i][j].setFillColor(stage64);
+                        break;
+                    case 128:
+                        txtValori[i][j].setFillColor(stage128);
+                        break;
+                    case 256:
+                        txtValori[i][j].setFillColor(stage256);
+                        break;
+                    case 512:
+                        txtValori[i][j].setFillColor(stage512);
+                        break;
+                    case 1024:
+                        txtValori[i][j].setFillColor(stage1024);
+                        break;
+                    case 2048:
+                        txtValori[i][j].setFillColor(stage2048);
+                        break;
+                    default:
+                        break;
+                    }
 
 
                     window.draw(quadrato[i][j]);
@@ -180,7 +218,7 @@ class Game{
             }
         }
         void toLeft(RenderWindow &window){
-            cout <<"a";
+            
         }
         void toUp(RenderWindow &window){
             
