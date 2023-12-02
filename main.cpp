@@ -16,6 +16,7 @@ const char rootFont[] = "./res/ClearSans.ttf";
 const Color QuadratoVuoto(205,193,180);
 //colore del background
 const Color BackGroundColor(187,173,160);
+const Vector2f dimFinestra(800, 600);
 
 class Game{
     private:
@@ -43,7 +44,7 @@ class Game{
             Vector2f dimQuadrato(100.0f,100.0f);
             quadrato[AREAGIOCO][AREAGIOCO];
             Text titoloGioco;
-
+    
             Font font;
             font.loadFromFile(rootFont);
             titoloGioco.setString("2048");
@@ -75,8 +76,10 @@ int main(){
     // create the window
     sf::RenderWindow window(sf::VideoMode(800, 600), "2048");
     Game game;
+
     
     initWindow(window);
+
     // run the program as long as the window is open    
     while (window.isOpen())
     {
@@ -88,6 +91,10 @@ int main(){
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
+            else if (event.type == sf::Event::Resized) {
+                // Reimposta le dimensioni della finestra alle dimensioni originali
+                window.setSize(dimFinestra);
+            }
         }
 
         // clear the window with black color
