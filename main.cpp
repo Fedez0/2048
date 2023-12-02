@@ -3,6 +3,7 @@
 #include <cstdlib> // Per la dichiarazione di calloc
 #include <cstring> // Per la dichiarazione di memset
 #include <fstream>
+#include <unistd.h>
 
 
 using namespace std;
@@ -46,6 +47,7 @@ const Vector2f dimQuadrato(100.0f,100.0f);
 class Game{
     private:
         int **areaGioco;
+        int a;
         int highScore;
         int currentScore;
         RectangleShape quadrato[AREAGIOCO][AREAGIOCO];
@@ -55,10 +57,11 @@ class Game{
         Text titoloGioco;
 
     public:
+        bool pressed;
         Game(RenderWindow &window){
             cout<<"Inizializzazione campo di gioco:\n";
 
-            
+            a=0;
             font.loadFromFile(rootFont);
 
             areaGioco = reinterpret_cast<int**>(calloc(AREAGIOCO, sizeof(int*)));
@@ -173,42 +176,43 @@ class Game{
                     switch (areaGioco[i][j])
                     {
                     case 2:
-                        txtValori[i][j].setFillColor(stage2);
+                        quadrato[i][j].setFillColor(stage2);
                         break;
                     case 4:
-                        txtValori[i][j].setFillColor(stage4);
+                        quadrato[i][j].setFillColor(stage4);
                         break;
                     case 8:
-                        txtValori[i][j].setFillColor(stage8);
+                        quadrato[i][j].setFillColor(stage8);
                         break;
                     case 16:
-                        txtValori[i][j].setFillColor(stage16);
+                        quadrato[i][j].setFillColor(stage16);
                         break;
                     case 32:
-                        txtValori[i][j].setFillColor(stage32);
+                        quadrato[i][j].setFillColor(stage32);
                         break;
                     case 64:
-                        txtValori[i][j].setFillColor(stage64);
+                        quadrato[i][j].setFillColor(stage64);
                         break;
                     case 128:
-                        txtValori[i][j].setFillColor(stage128);
+                        quadrato[i][j].setFillColor(stage128);
                         break;
                     case 256:
-                        txtValori[i][j].setFillColor(stage256);
+                        quadrato[i][j].setFillColor(stage256);
                         break;
                     case 512:
-                        txtValori[i][j].setFillColor(stage512);
+                        quadrato[i][j].setFillColor(stage512);
                         break;
                     case 1024:
-                        txtValori[i][j].setFillColor(stage1024);
+                        quadrato[i][j].setFillColor(stage1024);
                         break;
                     case 2048:
-                        txtValori[i][j].setFillColor(stage2048);
+                        quadrato[i][j].setFillColor(stage2048);
                         break;
                     default:
+                        quadrato[i][j].setFillColor(QuadratoVuoto);
                         break;
                     }
-
+                    
 
                     window.draw(quadrato[i][j]);
                     if(areaGioco[i][j]!=0){
@@ -217,19 +221,103 @@ class Game{
                 }
             }
         }
+        void turnPressed(){
+            pressed=!pressed;
+        }
         void toLeft(RenderWindow &window){
-            
+            for(int i=AREAGIOCO-1;i>=0;i--){
+                for(int j=AREAGIOCO-1;j>=0;j--){
+                    if(areaGioco[i][j] && j>0){
+                        if(areaGioco[i][j-1]==0){
+                            areaGioco[i][j-1]=areaGioco[i][j];
+                            areaGioco[i][j]=0;
+
+                        }else if(areaGioco[i][j-1]==areaGioco[i][j]){
+                            areaGioco[i][j-1]*=2;
+                            areaGioco[i][j]=0;
+                        }
+                    }
+                }
+            }
+            turnPressed();
         }
         void toUp(RenderWindow &window){
+            for(int i=AREAGIOCO-1;i>=0;i--){
+                for(int j=AREAGIOCO-1;j>=0;j--){
+                    if(areaGioco[j][i] && j>0){
+                        if(areaGioco[j-1][i]==0){
+                            areaGioco[j-1][i]=areaGioco[j][i];
+                            areaGioco[j][i]=0;
+
+                        }else if(areaGioco[j-1][i]==areaGioco[j][i]){
+                            areaGioco[j-1][i]*=2;
+                            areaGioco[j][i]=0;
+                        }
+                    }
+                }
+            }
+            turnPressed();
             
         }
         void toRight(RenderWindow &window){
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++){
+                    if(areaGioco[i][j] && (j+1)!=AREAGIOCO){
+                        if(areaGioco[i][j+1]==0){
+                            areaGioco[i][j+1]=areaGioco[i][j];
+                            areaGioco[i][j]=0;
+
+                        }else if(areaGioco[i][j+1]==areaGioco[i][j]){
+                            areaGioco[i][j+1]*=2;
+                            areaGioco[i][j]=0;
+                        }
+                    }
+                }
+            }
+            turnPressed();
             
         }
         void toDown(RenderWindow &window){
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++){
+                    if(areaGioco[j][i] && (j+1)!=AREAGIOCO){
+                        if(areaGioco[j+1][i]==0){
+                            areaGioco[j+1][i]=areaGioco[j][i];
+                            areaGioco[i][j]=0;
+
+                        }else if(areaGioco[j+1][i]==areaGioco[j][i]){
+                            areaGioco[j+1][i]*=2;
+                            areaGioco[j][i]=0;
+                        }
+                    }
+                }
+            }
+            turnPressed();
             
         }
-        
+        void newBlock(RenderWindow &window){
+            if(a==0){
+                srand(time(NULL));
+                int x;
+                int y;
+                do{
+                    x=rand()%AREAGIOCO;
+                    y=rand()%AREAGIOCO;
+                }while(areaGioco[x][y]!=0);
+
+                int num=rand()%100;
+                if(num<75){
+                    areaGioco[x][y]=2;
+                }else{
+                    areaGioco[x][y]=4;
+                }
+                a++;
+            }else{
+                a--;
+            }
+            
+
+        }
 
 
     
@@ -262,22 +350,31 @@ int main(){
 
         // clear the window with black color
         
-        if (sf::Keyboard::isKeyPressed(Keyboard::Left))
+        if (sf::Keyboard::isKeyPressed(Keyboard::Left)&&!game.pressed)
         {
+            game.turnPressed();
             game.toLeft(window);
+            game.newBlock(window);
         }
         if (sf::Keyboard::isKeyPressed(Keyboard::Right))
         {
+            game.turnPressed();
             game.toRight(window);
+            game.newBlock(window);
         }
         if (sf::Keyboard::isKeyPressed(Keyboard::Up))
         {
+            game.turnPressed();
             game.toUp(window);
+            game.newBlock(window);
         }
         if (sf::Keyboard::isKeyPressed(Keyboard::Down))
         {
+            game.turnPressed();
             game.toDown(window);
+            game.newBlock(window);
         }
+        usleep(5000);
         
 
 
