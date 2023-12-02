@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+// g++ -std=c++11 -o 2048_game main.cpp -lsfml-graphics -lsfml-window -lsfml-system
 #include <iostream>
 #include <cstdlib> // Per la dichiarazione di calloc
 #include <cstring> // Per la dichiarazione di memset
@@ -57,7 +58,7 @@ class Game{
         Text titoloGioco;
 
     public:
-        bool pressed;
+        
         Game(RenderWindow &window){
             cout<<"Inizializzazione campo di gioco:\n";
 
@@ -221,78 +222,98 @@ class Game{
                 }
             }
         }
-        void turnPressed(){
-            pressed=!pressed;
-        }
-        void toLeft(RenderWindow &window){
+        
+        bool toLeft(RenderWindow &window){
+            bool changed=false;
             for(int i=AREAGIOCO-1;i>=0;i--){
                 for(int j=AREAGIOCO-1;j>=0;j--){
                     if(areaGioco[i][j] && j>0){
                         if(areaGioco[i][j-1]==0){
                             areaGioco[i][j-1]=areaGioco[i][j];
                             areaGioco[i][j]=0;
+                            changed=true;
 
                         }else if(areaGioco[i][j-1]==areaGioco[i][j]){
                             areaGioco[i][j-1]*=2;
                             areaGioco[i][j]=0;
+                            changed=true;
                         }
                     }
                 }
             }
-            turnPressed();
+
+            return changed;
+           
         }
-        void toUp(RenderWindow &window){
+        bool toUp(RenderWindow &window){
+            bool changed=false;
             for(int i=AREAGIOCO-1;i>=0;i--){
                 for(int j=AREAGIOCO-1;j>=0;j--){
                     if(areaGioco[j][i] && j>0){
+                        
+                        if(areaGioco[j-1][i]==areaGioco[j][i]){
+                            areaGioco[j-1][i]*=2;
+                            areaGioco[j][i]=0;
+                            changed=true;
+                        }
                         if(areaGioco[j-1][i]==0){
                             areaGioco[j-1][i]=areaGioco[j][i];
                             areaGioco[j][i]=0;
-
-                        }else if(areaGioco[j-1][i]==areaGioco[j][i]){
-                            areaGioco[j-1][i]*=2;
-                            areaGioco[j][i]=0;
+                            changed=true;
                         }
                     }
                 }
             }
-            turnPressed();
+            return changed;
+           
             
         }
-        void toRight(RenderWindow &window){
+        bool toRight(RenderWindow &window){
+            bool changed=false;
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[i][j] && (j+1)!=AREAGIOCO){
+                        
+                        if(areaGioco[i][j+1]==areaGioco[i][j]){
+                            areaGioco[i][j+1]*=2;
+                            areaGioco[i][j]=0;
+                            changed=true;
+                        }
                         if(areaGioco[i][j+1]==0){
                             areaGioco[i][j+1]=areaGioco[i][j];
                             areaGioco[i][j]=0;
+                            changed=true;
 
-                        }else if(areaGioco[i][j+1]==areaGioco[i][j]){
-                            areaGioco[i][j+1]*=2;
-                            areaGioco[i][j]=0;
                         }
                     }
                 }
             }
-            turnPressed();
+            return changed;
+            
             
         }
-        void toDown(RenderWindow &window){
+        bool toDown(RenderWindow &window){
+            bool changed=false;
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[j][i] && (j+1)!=AREAGIOCO){
+                        
+                        if(areaGioco[j+1][i]==areaGioco[j][i]){
+                            areaGioco[j+1][i]*=2;
+                            areaGioco[j][i]=0;
+                            changed=true;
+                        }
                         if(areaGioco[j+1][i]==0){
                             areaGioco[j+1][i]=areaGioco[j][i];
                             areaGioco[i][j]=0;
+                            changed=true;
 
-                        }else if(areaGioco[j+1][i]==areaGioco[j][i]){
-                            areaGioco[j+1][i]*=2;
-                            areaGioco[j][i]=0;
                         }
                     }
                 }
             }
-            turnPressed();
+            return changed;
+            
             
         }
         void newBlock(RenderWindow &window){
@@ -345,36 +366,44 @@ int main(){
             else if (event.type == sf::Event::Resized) {
                 // Reimposta le dimensioni della finestra alle dimensioni originali
                 window.setSize(dimFinestra);
+            }else if(event.type==Event::KeyReleased){
+                bool changed=false;
+                bool temp=false;
+                if(event.key.code==Keyboard::Up){
+                    temp=game.toUp(window);
+                    if(temp){
+                        changed=true;
+                    }
+                }
+                if(event.key.code==Keyboard::Down){
+                    temp=game.toDown(window);
+                    if(temp){
+                        changed=true;
+                    }
+                }
+                if(event.key.code==Keyboard::Right){
+                    temp=game.toRight(window);
+                    if(temp){
+                        changed=true;
+                    }
+                }
+                if(event.key.code==Keyboard::Left){
+                    temp=game.toLeft(window);
+                    if(temp){
+                        changed=true;
+                    }
+                }
+                    
+                if(changed){
+                    game.newBlock(window);
+                }
             }
         }
 
         // clear the window with black color
         
-        if (sf::Keyboard::isKeyPressed(Keyboard::Left)&&!game.pressed)
-        {
-            game.turnPressed();
-            game.toLeft(window);
-            game.newBlock(window);
-        }
-        if (sf::Keyboard::isKeyPressed(Keyboard::Right))
-        {
-            game.turnPressed();
-            game.toRight(window);
-            game.newBlock(window);
-        }
-        if (sf::Keyboard::isKeyPressed(Keyboard::Up))
-        {
-            game.turnPressed();
-            game.toUp(window);
-            game.newBlock(window);
-        }
-        if (sf::Keyboard::isKeyPressed(Keyboard::Down))
-        {
-            game.turnPressed();
-            game.toDown(window);
-            game.newBlock(window);
-        }
-        usleep(5000);
+        
+        
         
 
 
