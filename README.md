@@ -18,12 +18,10 @@ git clone https://github.com/tuonome/2048-sfml.git
 # Entra nella directory del progetto
 cd 2048-sfml
 
-# Crea una directory per gli oggetti compilati
-mkdir build
-cd build
+# compila gli oggetti
+g++ -std=c++11 -o 2048_game main.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
-# Configura il progetto
-cmake ..
+
 
 # Compila il progetto
-make
+./2048_game
