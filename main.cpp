@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+
+//compile command
 // g++ -std=c++11 -o 2048_game main.cpp -lsfml-graphics -lsfml-window -lsfml-system
 #include <iostream>
 #include <cstdlib> // Per la dichiarazione di calloc
