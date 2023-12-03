@@ -102,14 +102,7 @@ class Game{
             fileHighScore.close();
 
         }
-        bool setValore(int riga,int colonna,int valore){
-            if(riga<0||riga>=AREAGIOCO||colonna<0||colonna>=AREAGIOCO){
-                return false;
-            }else{
-                areaGioco[riga][colonna]=valore;
-                return true;
-            }
-        }
+
         void disegnaQuadrati(RenderWindow &window){//INIZIALIZZAZIONE DEI QUADRATI
             
             quadrato[AREAGIOCO][AREAGIOCO];
