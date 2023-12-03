@@ -243,6 +243,19 @@ class Game{
                     }
                 }
             }
+            for(int i=AREAGIOCO-1;i>=0;i--){
+                for(int j=AREAGIOCO-1;j>=0;j--){
+                    if(areaGioco[i][j] && j>0){
+                        if(areaGioco[i][j-1]==0){
+                            areaGioco[i][j-1]=areaGioco[i][j];
+                            areaGioco[i][j]=0;
+                            changed=true;
+
+                        }
+                    }
+                }
+            }
+            
 
             return changed;
            
@@ -258,6 +271,18 @@ class Game{
                             areaGioco[j][i]=0;
                             changed=true;
                         }
+                        if(areaGioco[j-1][i]==0){
+                            areaGioco[j-1][i]=areaGioco[j][i];
+                            areaGioco[j][i]=0;
+                            changed=true;
+                        }
+                    }
+                }
+            }
+            for(int i=AREAGIOCO-1;i>=0;i--){
+                for(int j=AREAGIOCO-1;j>=0;j--){
+                    if(areaGioco[j][i] && j>0){
+                        
                         if(areaGioco[j-1][i]==0){
                             areaGioco[j-1][i]=areaGioco[j][i];
                             areaGioco[j][i]=0;
@@ -290,6 +315,19 @@ class Game{
                     }
                 }
             }
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++){
+                    if(areaGioco[i][j] && (j+1)!=AREAGIOCO){
+                        
+                        if(areaGioco[i][j+1]==0){
+                            areaGioco[i][j+1]=areaGioco[i][j];
+                            areaGioco[i][j]=0;
+                            changed=true;
+
+                        }
+                    }
+                }
+            }
             return changed;
             
             
@@ -305,6 +343,19 @@ class Game{
                             areaGioco[j][i]=0;
                             changed=true;
                         }
+                        if(areaGioco[j+1][i]==0){
+                            areaGioco[j+1][i]=areaGioco[j][i];
+                            areaGioco[i][j]=0;
+                            changed=true;
+
+                        }
+                    }
+                }
+            }
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++){
+                    if(areaGioco[j][i] && (j+1)!=AREAGIOCO){
+                        
                         if(areaGioco[j+1][i]==0){
                             areaGioco[j+1][i]=areaGioco[j][i];
                             areaGioco[i][j]=0;
