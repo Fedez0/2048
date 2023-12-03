@@ -50,7 +50,6 @@ const Vector2f dimQuadrato(100.0f,100.0f);
 class Game{
     private:
         int **areaGioco;
-        int a;
         int highScore;
         int currentScore;
         RectangleShape quadrato[AREAGIOCO][AREAGIOCO];
@@ -64,7 +63,6 @@ class Game{
         Game(RenderWindow &window){
             cout<<"Inizializzazione campo di gioco:\n";
 
-            a=0;
             font.loadFromFile(rootFont);
 
             areaGioco = reinterpret_cast<int**>(calloc(AREAGIOCO, sizeof(int*)));
@@ -338,7 +336,7 @@ class Game{
                         }
                         if(areaGioco[j+1][i]==0){
                             areaGioco[j+1][i]=areaGioco[j][i];
-                            areaGioco[i][j]=0;
+                            areaGioco[j][i]=0;
                             changed=true;
 
                         }
@@ -363,25 +361,39 @@ class Game{
             
         }
         void newBlock(RenderWindow &window){
-            if(a==0){
-                srand(time(NULL));
-                int x;
-                int y;
-                do{
-                    x=rand()%AREAGIOCO;
-                    y=rand()%AREAGIOCO;
-                }while(areaGioco[x][y]!=0);
-
-                int num=rand()%100;
-                if(num<75){
-                    areaGioco[x][y]=2;
-                }else{
-                    areaGioco[x][y]=4;
-                }
-                a++;
-            }else{
-                a--;
+            cout << endl;
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++)
+                    cout << areaGioco[i][j]<< " ";
+                cout << endl;
             }
+            
+
+
+            cout << "spawned";
+            srand(time(NULL));
+            int x;
+            int y;
+            do{
+                x=rand()%AREAGIOCO;
+                y=rand()%AREAGIOCO;
+            }while(areaGioco[x][y]!=0);
+            int num=rand()%100;
+            if(num<75){
+                areaGioco[x][y]=2;
+            }else{
+                areaGioco[x][y]=4;
+            }
+
+
+            //debug
+            cout << x<<" "<< y<<endl;
+            for(int i=0;i<AREAGIOCO;i++){
+                for(int j=0;j<AREAGIOCO;j++)
+                    cout << areaGioco[i][j]<< " ";
+                cout << endl;
+            }
+            
             
 
         }
