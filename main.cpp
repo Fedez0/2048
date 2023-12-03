@@ -361,12 +361,12 @@ class Game{
             
         }
         void newBlock(RenderWindow &window){
-            cout << endl;
+            /*cout << endl;
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++)
                     cout << areaGioco[i][j]<< " ";
                 cout << endl;
-            }
+            }*/
             
 
 
@@ -387,12 +387,12 @@ class Game{
 
 
             //debug
-            cout << x<<" "<< y<<endl;
+            /*cout << x<<" "<< y<<endl;
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++)
                     cout << areaGioco[i][j]<< " ";
                 cout << endl;
-            }
+            }*/
             
             
 
