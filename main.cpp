@@ -59,14 +59,14 @@ class Game{
         Text titoloGioco;
 
     public:
-        
+
         Game(RenderWindow &window){
             cout<<"Inizializzazione campo di gioco:\n";
 
             font.loadFromFile(rootFont);
 
             areaGioco = reinterpret_cast<int**>(calloc(AREAGIOCO, sizeof(int*)));
-            
+
             for (int i = 0; i < AREAGIOCO; ++i) {
                 areaGioco[i] = reinterpret_cast<int*>(calloc(AREAGIOCO, sizeof(int)));
             }
@@ -87,8 +87,8 @@ class Game{
                     window.draw(txtValori[i][j]);
                 }
             }
-            
-            
+
+
 
         }  
         void setNewHighScore(int score){
@@ -102,11 +102,11 @@ class Game{
         }
 
         void disegnaQuadrati(RenderWindow &window){//INIZIALIZZAZIONE DEI QUADRATI
-            
+
             quadrato[AREAGIOCO][AREAGIOCO];
-            
-    
-            
+
+
+
             titoloGioco.setString("2048");
             titoloGioco.setCharacterSize(24);
             titoloGioco.setFont(font);
@@ -114,9 +114,9 @@ class Game{
             titoloGioco.setFillColor(Color(119,110,101));
             titoloGioco.setPosition(800/2-30,30);
             window.draw(titoloGioco);
-            
 
-            
+
+
             char highScoreStr[BUFFERSTR];
             sprintf(highScoreStr,"Highscore: %d",highScore);
             txtHighScore.setString(highScoreStr);
@@ -169,44 +169,44 @@ class Game{
                     txtValori[i][j].setString(temp);
                     switch (areaGioco[i][j])
                     {
-                    case 2:
-                        quadrato[i][j].setFillColor(stage2);
-                        break;
-                    case 4:
-                        quadrato[i][j].setFillColor(stage4);
-                        break;
-                    case 8:
-                        quadrato[i][j].setFillColor(stage8);
-                        break;
-                    case 16:
-                        quadrato[i][j].setFillColor(stage16);
-                        break;
-                    case 32:
-                        quadrato[i][j].setFillColor(stage32);
-                        break;
-                    case 64:
-                        quadrato[i][j].setFillColor(stage64);
-                        break;
-                    case 128:
-                        quadrato[i][j].setFillColor(stage128);
-                        break;
-                    case 256:
-                        quadrato[i][j].setFillColor(stage256);
-                        break;
-                    case 512:
-                        quadrato[i][j].setFillColor(stage512);
-                        break;
-                    case 1024:
-                        quadrato[i][j].setFillColor(stage1024);
-                        break;
-                    case 2048:
-                        quadrato[i][j].setFillColor(stage2048);
-                        break;
-                    default:
-                        quadrato[i][j].setFillColor(QuadratoVuoto);
-                        break;
+                        case 2:
+                            quadrato[i][j].setFillColor(stage2);
+                            break;
+                        case 4:
+                            quadrato[i][j].setFillColor(stage4);
+                            break;
+                        case 8:
+                            quadrato[i][j].setFillColor(stage8);
+                            break;
+                        case 16:
+                            quadrato[i][j].setFillColor(stage16);
+                            break;
+                        case 32:
+                            quadrato[i][j].setFillColor(stage32);
+                            break;
+                        case 64:
+                            quadrato[i][j].setFillColor(stage64);
+                            break;
+                        case 128:
+                            quadrato[i][j].setFillColor(stage128);
+                            break;
+                        case 256:
+                            quadrato[i][j].setFillColor(stage256);
+                            break;
+                        case 512:
+                            quadrato[i][j].setFillColor(stage512);
+                            break;
+                        case 1024:
+                            quadrato[i][j].setFillColor(stage1024);
+                            break;
+                        case 2048:
+                            quadrato[i][j].setFillColor(stage2048);
+                            break;
+                        default:
+                            quadrato[i][j].setFillColor(QuadratoVuoto);
+                            break;
                     }
-                    
+
 
                     window.draw(quadrato[i][j]);
                     if(areaGioco[i][j]!=0){
@@ -215,7 +215,7 @@ class Game{
                 }
             }
         }
-        
+
         bool toLeft(RenderWindow &window){
             bool changed=false;
             for(int i=AREAGIOCO-1;i>=0;i--){
@@ -230,6 +230,7 @@ class Game{
                             areaGioco[i][j-1]*=2;
                             areaGioco[i][j]=0;
                             changed=true;
+                            j--;
                         }
                     }
                 }
@@ -246,23 +247,23 @@ class Game{
                     }
                 }
             }
-            
+
 
             return changed;
-           
+
         }
         bool toUp(RenderWindow &window){
             bool changed=false;
             for(int i=AREAGIOCO-1;i>=0;i--){
                 for(int j=AREAGIOCO-1;j>=0;j--){
                     if(areaGioco[j][i] && j>0){
-                        
+
                         if(areaGioco[j-1][i]==areaGioco[j][i]){
                             areaGioco[j-1][i]*=2;
                             areaGioco[j][i]=0;
                             changed=true;
-                        }
-                        if(areaGioco[j-1][i]==0){
+                            j--;
+                        }else if(areaGioco[j-1][i]==0){
                             areaGioco[j-1][i]=areaGioco[j][i];
                             areaGioco[j][i]=0;
                             changed=true;
@@ -273,7 +274,7 @@ class Game{
             for(int i=AREAGIOCO-1;i>=0;i--){
                 for(int j=AREAGIOCO-1;j>=0;j--){
                     if(areaGioco[j][i] && j>0){
-                        
+
                         if(areaGioco[j-1][i]==0){
                             areaGioco[j-1][i]=areaGioco[j][i];
                             areaGioco[j][i]=0;
@@ -283,21 +284,21 @@ class Game{
                 }
             }
             return changed;
-           
-            
+
+
         }
         bool toRight(RenderWindow &window){
             bool changed=false;
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[i][j] && (j+1)!=AREAGIOCO){
-                        
+
                         if(areaGioco[i][j+1]==areaGioco[i][j]){
                             areaGioco[i][j+1]*=2;
                             areaGioco[i][j]=0;
                             changed=true;
-                        }
-                        if(areaGioco[i][j+1]==0){
+                            j++;
+                        }else if(areaGioco[i][j+1]==0){
                             areaGioco[i][j+1]=areaGioco[i][j];
                             areaGioco[i][j]=0;
                             changed=true;
@@ -309,7 +310,7 @@ class Game{
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[i][j] && (j+1)!=AREAGIOCO){
-                        
+
                         if(areaGioco[i][j+1]==0){
                             areaGioco[i][j+1]=areaGioco[i][j];
                             areaGioco[i][j]=0;
@@ -320,36 +321,38 @@ class Game{
                 }
             }
             return changed;
-            
-            
+
+
         }
         bool toDown(RenderWindow &window){
             bool changed=false;
+            
+            //this->print();
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[j][i] && (j+1)!=AREAGIOCO){
-                        
+
                         if(areaGioco[j+1][i]==areaGioco[j][i]){
                             areaGioco[j+1][i]*=2;
                             areaGioco[j][i]=0;
                             changed=true;
-                        }
-                        if(areaGioco[j+1][i]==0){
+                            j++;
+                        }else if(areaGioco[j+1][i]==0){
                             areaGioco[j+1][i]=areaGioco[j][i];
                             areaGioco[j][i]=0;
                             changed=true;
-
                         }
                     }
                 }
             }
+            //this->print();
             for(int i=0;i<AREAGIOCO;i++){
                 for(int j=0;j<AREAGIOCO;j++){
                     if(areaGioco[j][i] && (j+1)!=AREAGIOCO){
-                        
+
                         if(areaGioco[j+1][i]==0){
                             areaGioco[j+1][i]=areaGioco[j][i];
-                            areaGioco[i][j]=0;
+                            areaGioco[j][i]=0;
                             changed=true;
 
                         }
@@ -357,20 +360,20 @@ class Game{
                 }
             }
             return changed;
-            
-            
+
+
         }
         void newBlock(RenderWindow &window){
             /*cout << endl;
-            for(int i=0;i<AREAGIOCO;i++){
-                for(int j=0;j<AREAGIOCO;j++)
-                    cout << areaGioco[i][j]<< " ";
-                cout << endl;
-            }*/
-            
+              for(int i=0;i<AREAGIOCO;i++){
+              for(int j=0;j<AREAGIOCO;j++)
+              cout << areaGioco[i][j]<< " ";
+              cout << endl;
+              }*/
 
 
-            cout << "spawned";
+
+           // cout << "spawned";
             srand(time(NULL));
             int x;
             int y;
@@ -388,18 +391,29 @@ class Game{
 
             //debug
             /*cout << x<<" "<< y<<endl;
+              for(int i=0;i<AREAGIOCO;i++){
+              for(int j=0;j<AREAGIOCO;j++)
+              cout << areaGioco[i][j]<< " ";
+              cout << endl;
+              }*/
+
+
+
+        }
+        void print(){
+            cout <<"\n\n\n";
             for(int i=0;i<AREAGIOCO;i++){
-                for(int j=0;j<AREAGIOCO;j++)
-                    cout << areaGioco[i][j]<< " ";
+                for(int j=0;j<AREAGIOCO;j++){
+                    cout << areaGioco[i][j] << " ";
+                }
                 cout << endl;
-            }*/
-            
-            
+
+            }
 
         }
 
 
-    
+
 };
 
 int main(){
@@ -407,7 +421,7 @@ int main(){
     sf::RenderWindow window(sf::VideoMode(800, 600), "2048");
     Game game(window);
 
-    
+
     initWindow(window);
     game.disegnaQuadrati(window);
     // run the program as long as the window is open    
@@ -451,18 +465,20 @@ int main(){
                         changed=true;
                     }
                 }
-                    
+
                 if(changed){
+                   // game.print();
                     game.newBlock(window);
+                   // game.print();
                 }
             }
         }
 
         // clear the window with black color
-        
-        
-        
-        
+
+
+
+
 
 
         // draw everything here...
